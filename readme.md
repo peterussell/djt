@@ -1,6 +1,6 @@
 # DJT: Django Testing
 
-This is a project for working through the Django tutorial at
+This is a repository for working through the Django tutorial at
 https://docs.djangoproject.com/.
 
  * Python v3.6.2
