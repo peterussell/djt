@@ -11,6 +11,8 @@ def index(request):
 
 
 def detail(request, question_id):
+    # get_object_or_404 calls get();
+    # get_list_or_404 does the same, except using filter()
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/detail.html', {'question': question})
 
