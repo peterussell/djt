@@ -1,7 +1,10 @@
+<!-- NB. the django url module uses the name defined in urls.py. the 'polls:' part is the -->
+<!--     namespacing defined in 'app_name' in urls.py, and 'detail' is the named route. -->
+
 {% if latest_questions_list %}
     <ul>
         {% for question in latest_questions_list %}
-            <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+            <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
         {% endfor %}
     </ul>
 {% else %}
