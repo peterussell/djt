@@ -1,26 +1,31 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.views import generic
 
 from .models import Question, Choice
 
 
-def index(request):
-    latest_questions_list = Question.objects.order_by('-pub_date')[:5]
-    context = { 'latest_questions_list': latest_questions_list }
-    return render(request, 'polls/index.html', context)
+class IndexView(generic.ListView):
+    # Overrides default of polls/question_list.html
+    template_name = 'polls/index.html'
+    # Overrides default of question_list
+    context_object_name = 'latest_questions_list'
+
+    def get_queryset(self):
+        """Return the last five published questions"""
+        return Question.objects.order_by('-pub_date')[:5]
 
 
-def detail(request, question_id):
-    # get_object_or_404 calls get();
-    # get_list_or_404 does the same, except using filter()
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'polls/detail.html', {'question': question})
+class DetailView(generic.DetailView):
+    model = Question
+    # Overrides default of polls/question_detail.html
+    template_name = 'polls/detail.html'
 
 
-def results(request, question_id):
-    response = "You're looking at the results for question {}.".format(question_id)
-    return HttpResponse(response)
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = 'polls/results.html'
 
 
 def vote(request, question_id):
@@ -38,8 +43,3 @@ def vote(request, question_id):
         selected_choice.save()
         # Always return a redirect after successfully dealing with POST data.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
-
-
-def results(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'polls/results.html', {'question': question})
